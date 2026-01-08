@@ -355,7 +355,25 @@ activar-deployment-7d8f9c6f9b-abcde  1/1     Running   worker-node1
 activar-deployment-7d8f9c6f9b-fghij  1/1     Running   worker-node2
 ```
 ---
+## Lens берёт данные о ресурсах нод и подов из Metrics API.
 
+Для этого нужен Metrics Server, который собирает метрики с kubelet на каждой ноде.
+
+🔹 Установка Metrics Server
+
+Для кластера с kubeadm / стандартный Kubernetes:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+Через минуту-другую Metrics Server начнёт собирать метрики.
+
+Проверяем:
+```bash
+kubectl get deployment metrics-server -n kube-system
+kubectl top nodes
+```
+---
 ## 🧹 Удаление воркер-ноды
 
 На мастере:
