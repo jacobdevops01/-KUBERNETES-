@@ -138,6 +138,7 @@ sudo systemctl status containerd --no-pager
 ---
 
 ## 🧩 3. Установка Kubernetes-компонентов
+📍 Где: MASTER + WORKER-1 + WORKER-2
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
