@@ -324,7 +324,36 @@ spec:
     targetPort: 80
   type: NodePort
 ```
+▶️ Как правильно запустить
+```bash
+nano activar.yaml
+Вставь весь YAML, сохрани и выйди.
+```
+Применяй манифест
+```bash
+kubectl apply -f activar.yaml
+```
+Ожидаемый вывод:
+```bash
+deployment.apps/activar-deployment created
+service/activar-service created
+```
+Проверь, что поды запущены
+```bash
+kubectl get pods -o wide
+```
+Ты увидишь, что поды:
 
+реально запущены на worker-нодах
+
+master только управляет
+
+Пример:
+```bash
+NAME                                 READY   STATUS    NODE
+activar-deployment-7d8f9c6f9b-abcde  1/1     Running   worker-node1
+activar-deployment-7d8f9c6f9b-fghij  1/1     Running   worker-node2
+```
 ---
 
 ## 🧹 Удаление воркер-ноды
