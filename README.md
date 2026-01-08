@@ -73,11 +73,17 @@ Disk: 120–200 GB HDD
     ├── install-containerd.sh        # Установка containerd
     └── install-k8s-packages.sh      # Установка kubeadm/kubelet/kubectl
 ```
+## Топология:
 
+🧠 MASTER — 172.16.18.196
+
+⚙️ WORKER-1 — 172.16.18.164
+
+⚙️ WORKER-2 — 172.16.18.165
 ---
 
 ## 🧩 1. Подготовка системы
-
+📍 Где: MASTER + WORKER-1 + WORKER-2 (ВСЕ НОДЫ)
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y apt-transport-https ca-certificates curl gpg
@@ -85,8 +91,10 @@ sudo apt install -y apt-transport-https ca-certificates curl gpg
 # 🔧 Отключаем swap (Kubernetes его не допускает)
 sudo swapoff -a
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
-
+```
 # 🧱 Настраиваем модули ядра и сетевые параметры
+📍 Где: MASTER + WORKER-1 + WORKER-2
+```bash
 cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
 overlay
 br_netfilter
@@ -107,7 +115,7 @@ sudo sysctl --system
 ---
 
 ## 🧩 2. Установка и настройка containerd
-
+📍 Где: MASTER + WORKER-1 + WORKER-2
 ```bash
 sudo apt install -y containerd
 
@@ -136,7 +144,9 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | \
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] \
 https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | \
   sudo tee /etc/apt/sources.list.d/kubernetes.list
-
+```
+📍 Где: MASTER + WORKER-1 + WORKER-2
+```bash
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
