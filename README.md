@@ -279,6 +279,53 @@ kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
 # Меняем: type: ClusterIP → type: NodePort
 kubectl -n kubernetes-dashboard get svc
 ```
+🔹 Установка Metrics Server
+
+Для кластера с kubeadm / стандартный Kubernetes:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+Через минуту Metrics Server начнёт собирать метрики.
+
+Проверяем:
+```bash
+kubectl get deployment metrics-server -n kube-system
+kubectl top nodes
+```
+Если не сработает Нужно запустить Metrics Server с флагом, который позволяет игнорировать проверку сертификатов kubelet.
+
+Редактируем deployment:
+```bash
+kubectl -n kube-system edit deployment metrics-server
+```
+Находим контейнер metrics-server → поле args: добавляем:
+```bash
+- --kubelet-insecure-tls
+- --kubelet-preferred-address-types=InternalIP
+```
+Пример:
+```bash
+spec:
+  containers:
+  - name: metrics-server
+    image: k8s.gcr.io/metrics-server/metrics-server:v0.12.5
+    args:
+    - --cert-dir=/tmp
+    - --secure-port=4443
+    - --kubelet-insecure-tls
+    - --kubelet-preferred-address-types=InternalIP
+```
+Сохраняем и выходим (:wq)
+🔹 Проверяем
+
+Через пару минут:
+
+```bash
+kubectl get pods -n kube-system | grep metrics-server
+kubectl top nodes
+```
+
 
 🔗 Теперь открой в браузере:  
 `https://<IP_МАСТЕРА>:<NodePort>`  
